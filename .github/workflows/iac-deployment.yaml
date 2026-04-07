@@ -1,0 +1,30 @@
+name: Infrastructure deployment
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Keyvault secrets retrieval
+        id: keyvault-secrets
+        uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: 'iac-lab-kv'
+          secrets: 'GRAFANA_USER,GRAFANA_PASSWORD'
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Initialize Terraform
+        run: | 
+          terraform init
+        working-directory: ./terraform
+
+      - name: Apply Terraform configuration
+        run: | 
+          terraform apply -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}"
+        working-directory: ./terraform

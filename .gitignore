@@ -1,0 +1,36 @@
+# Secrets
+.secrets
+
+# Terraform files (ignore all except main.tf and provider.tf)
+terraform/*.tf
+!terraform/main.tf
+!terraform/provider.tf
+
+# Terraform state and lock files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+terraform.lock.hcl
+*.tfvars
+
+# Ansible
+ansible/*.retry
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
