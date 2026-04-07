@@ -46,4 +46,5 @@ jobs:
             terraform apply -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}" -var "sub_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
           else
             terraform destroy -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}" -var "sub_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          fi
         working-directory: ./terraform
