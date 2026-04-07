@@ -21,4 +21,5 @@ provider "azurerm" {
     }
   }
   subscription_id = var.sub_id
+  use_oidc = true
 }
