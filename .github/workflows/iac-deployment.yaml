@@ -43,8 +43,8 @@ jobs:
       - name: Apply Terraform configuration
         run: | 
           if [[ "${{ github.event.inputs.action }}" == "apply" ]]; then
-            terraform apply -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}" -var "sub_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+            terraform apply -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}" -var "sub_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
           else
-            terraform destroy -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}" -var "sub_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+            terraform destroy -auto-approve -var "grafana_user=${{ steps.keyvault-secrets.outputs.GRAFANA_USER }}" -var "grafana_password=${{ steps.keyvault-secrets.outputs.GRAFANA_PASSWORD }}" -var "sub_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" -var "ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
           fi
         working-directory: ./terraform

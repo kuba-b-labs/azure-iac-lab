@@ -8,7 +8,7 @@ module "virtual_machine" {
   admin_username = "kuba"
   kind           = "Linux"
   vm_size        = "Standard_B2ats_v2"
-  ssh_key        = file(var.ssh_public_key_path)
+  ssh_key        = var.ssh_public_key
   rg_name        = "dev"
   create_vnet    = true
   create_rg      = false
