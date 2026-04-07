@@ -1,10 +1,6 @@
 # Secrets
 .secrets
 
-# Terraform files (ignore all except main.tf and provider.tf)
-terraform/*.tf
-!terraform/main.tf
-!terraform/provider.tf
 
 # Terraform state and lock files
 *.tfstate
