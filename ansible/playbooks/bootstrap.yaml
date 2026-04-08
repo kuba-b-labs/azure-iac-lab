@@ -1,0 +1,6 @@
+- hosts: allo
+  name: Bootstrap new web server
+  
+  roles:
+    - hardening
+    - nginx

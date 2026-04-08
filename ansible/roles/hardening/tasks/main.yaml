@@ -1,0 +1,28 @@
+- name: System update
+  package:
+    name: "*"
+    state: latest
+    update_cache: true
+
+- name: Create ansible user
+  user:
+    name: ansible-user
+    state: present
+    shell: /bin/bash
+
+- name: Add ssh key
+  authorized_key:
+    user: ansible-user
+    state: present
+    key: "{{ lookup('file', playbook_dir + '/id_rsa_ansible.pub') }}"
+
+- name: Disable ssh root allow
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regex: "^PermitRootLogin"
+    line: "PermitRootLogin no \nPasswordAuthentication no"
+
+- name: Restart sshd service
+  service:
+    name: ssh
+    state: restarted
