@@ -1,0 +1,39 @@
+name: Ansible linting and syntax check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ansible/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13' 
+      
+      - run: pip3 install yamllint
+
+      - name: Lint Ansible playbooks
+        run: |
+          yamllint ansible
+      
+      - name: Playbook syntax check
+        run: |
+          ansible-playbook ansible/bootstrap.yaml --syntax-check -i ansible/inventory/hosts
