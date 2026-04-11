@@ -1,55 +1,56 @@
-    - name: Download node_exporter
-      get_url:
-        url: "{{ item.url }}"
-        dest: "{{ item.dest }}"
-      with_items:
-        - { dest: /tmp/node_exporter.tar.gz, url: "https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz" }
-        - { dest: /tmp/nginx_exporter.tar.gz, url: "https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.1.0/nginx-prometheus-exporter_1.1.0_linux_amd64.tar.gz"}
-  
+---
+- name: Download node_exporter
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { dest: /tmp/node_exporter.tar.gz, url: "https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz" }
+    - { dest: /tmp/nginx_exporter.tar.gz, url: "https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.1.0/nginx-prometheus-exporter_1.1.0_linux_amd64.tar.gz"}
 
-    - name: Extract node_exporter
-      unarchive:
-        src: "{{ item }}"
-        dest: /tmp
-        remote_src: yes
-      with_items:
-        - /tmp/node_exporter.tar.gz
-        - /tmp/nginx_exporter.tar.gz
 
-    - name: Move files
-      copy:
-        remote_src: true
-        src: "{{ item }}"
-        dest: /usr/local/bin
-        owner: root
-        group: root
-        mode: "0744"
-      become: true
-      with_items:
-        - /tmp/node_exporter-1.6.1.linux-amd64/node_exporter
-        - /tmp/nginx_prometheus_exporter/nginx-prometheus-exporter
+- name: Extract node_exporter
+  unarchive:
+    src: "{{ item }}"
+    dest: /tmp
+    remote_src: yes
+  with_items:
+    - /tmp/node_exporter.tar.gz
+    - /tmp/nginx_exporter.tar.gz
 
-    - name: Copy cron files
-      template:
-        src: "{{ item }}"
-        dest: "/etc/systemd/system/{{ item }}"
-        owner: root
-        group: root
-        mode: "0644"
-      with_items:
-        - monitoring/services/node_exporter.service
-        - monitoring/services/nginx_exporter.service
-      become: true
+- name: Move files
+  copy:
+    remote_src: true
+    src: "{{ item }}"
+    dest: /usr/local/bin
+    owner: root
+    group: root
+    mode: "0744"
+  become: true
+  with_items:
+    - /tmp/node_exporter-1.6.1.linux-amd64/node_exporter
+    - /tmp/nginx_prometheus_exporter/nginx-prometheus-exporter
 
-    - name: Enable and start the timer
-      become: true
-      systemd_service:
-        name: "{{ item }}"
-        state: started
-        enabled: true
-        daemon_reload: yes
-      with_items:
-        - node_exporter.service
-        - nginx_exporter.service
-      notify:
-        - reload nginx
+- name: Copy cron files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  with_items:
+    - monitoring/services/node_exporter.service
+    - monitoring/services/nginx_exporter.service
+  become: true
+
+- name: Enable and start the timer
+  become: true
+  systemd_service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+    daemon_reload: yes
+  with_items:
+    - node_exporter.service
+    - nginx_exporter.service
+  notify:
+    - reload nginx

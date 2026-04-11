@@ -1,6 +1,7 @@
+---
 - hosts: azure-iac-lab
   name: Bootstrap new web server
-  become: true 
+  become: true
   roles:
     # - hardening
     - nginx
