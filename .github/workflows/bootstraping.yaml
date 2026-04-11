@@ -27,6 +27,7 @@ jobs:
           ansible-galaxy collection install azure.azcollection
           pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
 
+
       - name: Test Ansible connectivity to dynamic inventory
         run: ansible azure-iac-lab -i azure_rm.yml -m ping
         working-directory: ./ansible/inventory
