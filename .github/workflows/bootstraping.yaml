@@ -25,7 +25,7 @@ jobs:
           pip install ansible
           pip install ansible[azure]
           ansible-galaxy collection install azure.azcollection
-          pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
+         # pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
 
 
       - name: Test Ansible connectivity to dynamic inventory
