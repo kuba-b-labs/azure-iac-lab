@@ -13,6 +13,7 @@ variable "grafana_password" {
 variable "ssh_public_key" {
   type    = string
   default = ""
+  sensitive = true
 }
 
 variable "sub_id" {
@@ -20,11 +21,7 @@ variable "sub_id" {
   default   = ""
   sensitive = true
 }
-variable "ssh_public_key" {
-  type    = string
-  default = ""
-  sensitive = true
-}
+
 variable "my_ip" {
   type      = string
   default   = ""
