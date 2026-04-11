@@ -19,6 +19,12 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
       - name: Install Ansible
         run: |
           python -m pip install --upgrade pip
@@ -29,8 +35,8 @@ jobs:
 
 
       - name: Test Ansible connectivity to dynamic inventory
-        run: ansible azure-iac-lab -i azure_rm.yml -m ping
+        run: ansible azure-iac-lab -i ./ansible/inventory/azure_rm.yml -m ping --private-key ~/.ssh/id_rsa
         working-directory: ./ansible/inventory
 
       - name: Run Ansible playbook
-        run: ansible-playbook -i azure_rm.yml ./ansible/playbooks/bootstrap.yaml
+        run: ansible-playbook -i ./ansible/inventory/azure_rm.yml ./ansible/playbooks/bootstrap.yaml --private-key ~/.ssh/id_rsa
