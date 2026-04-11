@@ -1,10 +1,10 @@
 terraform {
-  backend "azurerm"{
-      resource_group_name  = "storageaccounts"
-      storage_account_name = "terraformremotebackendjb"
-      container_name       = "azure-iac-lab"
-      key                  = "terraform.tfstate"
-    }
+  backend "azurerm" {
+    resource_group_name  = "storageaccounts"
+    storage_account_name = "terraformremotebackendjb"
+    container_name       = "azure-iac-lab"
+    key                  = "terraform.tfstate"
+  }
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -21,5 +21,5 @@ provider "azurerm" {
     }
   }
   subscription_id = var.sub_id
-  use_oidc = true
+  use_oidc        = true
 }

@@ -5,11 +5,14 @@
 
 - name: Copy nginx starting page
   copy:
-    src: "nginx/index.html"
-    dest: "/var/www/html/index.nginx-debian.html"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     owner: root
     group: root
     mode: 0644
+  with_items:
+    - {"src": "nginx/index.html", "dest": "/var/www/html/index.nginx-debian.html"}
+    - {"src": "nginx/exporter.conf", "dest": "/etc/nginx/conf.d/exporter.conf"}
 
 - name: Start nginx
   service:

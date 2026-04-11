@@ -1,6 +1,7 @@
-- hosts: allo
+- hosts: azure-iac-lab
   name: Bootstrap new web server
-  
+  become: true 
   roles:
-    - hardening
+    # - hardening
     - nginx
+    - monitoring

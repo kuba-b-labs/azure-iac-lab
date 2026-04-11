@@ -12,6 +12,53 @@ module "virtual_machine" {
   rg_name        = "dev"
   create_vnet    = true
   create_rg      = false
+  priority       = "Spot"
+  security_rules = [
+    {
+      name                       = "SSH"
+      priority                   = 1001
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "22"
+      source_address_prefix      = var.my_ip
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "allowHTTP"
+      priority                   = 1002
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "80"
+      source_address_prefix      = var.my_ip
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "allowPrometheus"
+      priority                   = 1003
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "9100"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name = "allowNginxExporter"
+      priority                   = 1004
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "9113"
+      source_address_prefix      = "VirtualNetwork"
+      destination_address_prefix = "VirtualNetwork"
+    }
+  ]
 }
 
 module "container_group" {
@@ -35,6 +82,24 @@ module "container_group" {
         GF_SECURITY_ADMIN_USER     = var.grafana_user
         GF_SECURITY_ADMIN_PASSWORD = var.grafana_password
       }
+      volumes = {
+        datasources = {
+          name                 = "datasources"
+          mount_path           = "/etc/grafana/provisioning/datasources"
+          read_only            = true
+          storage_account_name = "containerstoragejb"
+          storage_account_key  = var.storage_account_key
+          share_name           = "grafana"
+        },
+        data = {
+          name                 = "data"
+          mount_path           = "/var/lib/grafana"
+          read_only            = false
+          storage_account_name = "containerstoragejb"
+          storage_account_key  = var.storage_account_key
+          share_name           = "grafana-data"
+        }
+      }
     }
     prometheus = {
       image  = "prom/prometheus:latest"
@@ -44,6 +109,16 @@ module "container_group" {
         port     = 9090
         protocol = "TCP"
       }]
+      volumes = {
+        config = {
+          name                 = "config"
+          mount_path           = "/etc/prometheus/"
+          read_only            = true
+          storage_account_name = "containerstoragejb"
+          storage_account_key  = var.storage_account_key
+          share_name           = "prometheus"
+        }
+      }
     }
   }
   subnet_ids = [azurerm_subnet.containers_subnet.id]
@@ -62,5 +137,6 @@ resource "azurerm_subnet" "containers_subnet" {
       actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
     }
   }
+  service_endpoints    = ["Microsoft.Storage"]
   depends_on = [module.virtual_machine]
 }
