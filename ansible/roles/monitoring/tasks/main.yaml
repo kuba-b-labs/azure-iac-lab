@@ -7,7 +7,6 @@
     - { dest: /tmp/node_exporter.tar.gz, url: "https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz" }
     - { dest: /tmp/nginx_exporter.tar.gz, url: "https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.1.0/nginx-prometheus-exporter_1.1.0_linux_amd64.tar.gz"}
 
-
 - name: Extract node_exporter
   unarchive:
     src: "{{ item }}"
