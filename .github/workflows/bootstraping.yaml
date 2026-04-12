@@ -21,9 +21,9 @@ jobs:
 
       - name: Setup SSH key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          mkdir -p ./.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ./.ssh/id_rsa
+          chmod 600 ./.ssh/id_rsa
 
 
       - name: Install Ansible Azure collection
@@ -33,8 +33,10 @@ jobs:
           pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
 
       - name: Test Ansible connectivity to dynamic inventory
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          ansible all -i ansible/inventory/azure_rm.yml -m ping --private-key ~/.ssh/id_rsa -u kuba
+          ansible all -i ansible/inventory/azure_rm.yml -m ping -u kuba --private-key ./.ssh/id_rsa 
 
       - name: Run Ansible playbook
         run: ansible-playbook -i ansible/inventory/azure_rm.yml ansible/playbooks/bootstrap.yaml --private-key ~/.ssh/id_rsa
