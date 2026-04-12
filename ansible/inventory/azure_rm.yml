@@ -4,4 +4,4 @@ include_vm_resource_groups:
   - dev
 auth_source: cli
 conditional_groups:
-  azure-iac-lab: "'dev' in resource_group"
+  azure_iac_lab: "'dev' in resource_group"

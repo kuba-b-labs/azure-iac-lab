@@ -1,5 +1,5 @@
 ---
-- hosts: azure-iac-lab
+- hosts: azure_iac_lab
   name: Bootstrap new web server
   become: true
   roles:
