@@ -34,7 +34,7 @@ jobs:
 
       - name: Test Ansible connectivity to dynamic inventory
         run: |
-          ansible all -i ansible/inventory/azure_rm.yml -m ping --private-key ~/.ssh/id_rsa
+          ansible all -i ansible/inventory/azure_rm.yml -m ping --private-key ~/.ssh/id_rsa -u kuba
 
       - name: Run Ansible playbook
         run: ansible-playbook -i ansible/inventory/azure_rm.yml ansible/playbooks/bootstrap.yaml --private-key ~/.ssh/id_rsa
